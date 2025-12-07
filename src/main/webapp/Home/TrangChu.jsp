@@ -14,6 +14,8 @@
 	<c:url var="url" value="/crud" />
 
 	<div class="container mt-4">
+	
+		<jsp:include page="/Home/Search.jsp"></jsp:include>
 		<div class="row">
 			<c:forEach var="v" items="${videos}">
 				<c:if test="${v.active}">
@@ -85,6 +87,8 @@
 
 		<div class="d-flex justify-content-center mt-3">
 			<form method="post" class="btn-group">
+				<input type="hidden" name="keyword" value="${param.keyword}">
+				
 				<button class="btn btn-outline-primary"
 					formaction="${url}/index?pageNumber=0&path=home">|<</button>
 				<button class="btn btn-outline-primary"

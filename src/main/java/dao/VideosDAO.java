@@ -6,6 +6,7 @@ import entity.Videos;
 
 public interface VideosDAO extends CrudDAO<Videos, String>{
 	List<Videos> findPageSize(int pageNumber, int pageSize);
+	List<Videos> findByKeyword(String keyword);
 	long count();
 	
 }

@@ -61,4 +61,16 @@ public class SharesDAOImpl implements SharesDAO{
 			em.getTransaction().rollback();
 		}
 	}
+	
+	// Thêm hàm này để phục vụ cho trang Thống kê (Tab 3)
+    @Override
+    public List<Shares> findByVideoId(String videoId) {
+        // Câu lệnh JPQL: Chọn tất cả Share mà video có id trùng với tham số truyền vào
+        String jpql = "SELECT s FROM Shares s WHERE s.video.id = :vid";
+        
+        TypedQuery<Shares> query = em.createQuery(jpql, Shares.class);
+        query.setParameter("vid", videoId);
+        
+        return query.getResultList();
+    }
 }

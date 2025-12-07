@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %> 
 
 <!DOCTYPE html>
 <html lang="vi">
@@ -26,7 +27,6 @@
         .video-preview { width: 100%; height: 200px; background: #eee; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 5px; border: 1px dashed #ccc; }
         .video-preview img { width: 100%; height: auto; object-fit: cover; }
         
-        /* Style cho nút play trên ảnh (Overlay) */
         .poster-container { position: relative; cursor: pointer; display: inline-block; }
         .play-overlay {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
@@ -39,6 +39,7 @@
 <body>
     <c:url var="url" value="/user"/>
     <c:url var="videoUrl" value="/video"/> 
+    <c:url var="reportUrl" value="/admin/report"/> 
 
     <div class="container-fluid">
         <div class="row">
@@ -57,6 +58,10 @@
                     
                     <a href="${videoUrl}/index?page=videos" class="nav-link ${param.page == 'videos' ? 'active' : ''}">
                         <i class="fa-solid fa-film"></i> Quản lý Video
+                    </a>
+
+                    <a href="${reportUrl}?page=reports&tab=favorites" class="nav-link ${param.page == 'reports' ? 'active' : ''}">
+                        <i class="fa-solid fa-chart-pie"></i> Báo cáo thống kê
                     </a>
                     
                     <a href="${pageContext.request.contextPath}/crud/index" class="nav-link mt-5 text-warning">
@@ -81,7 +86,7 @@
                 <div class="main-content">
                     <c:choose>
                         
-                        <%-- CASE 1: QUẢN LÝ USER --%>
+                        <%-- CASE 1: USER --%>
                         <c:when test="${param.page == 'users'}">
                             <div class="card card-custom">
                                 <div class="card-header-custom d-flex justify-content-between align-items-center">
@@ -111,7 +116,7 @@
                             </div>
                         </c:when>
 
-                        <%-- CASE 2: QUẢN LÝ VIDEO (ĐÃ SỬA) --%>
+                        <%-- CASE 2: VIDEO --%>
                         <c:when test="${param.page == 'videos'}">
                             <div class="card card-custom">
                                 <div class="card-header-custom d-flex justify-content-between align-items-center">
@@ -146,8 +151,7 @@
                                                             <div class="poster-container" onclick="playVideo('${vid.id}', '${vid.titile}')">
                                                                 <img src="https://img.youtube.com/vi/${vid.id}/mqdefault.jpg" 
                                                                      class="img-fluid rounded" 
-                                                                     alt="poster"
-                                                                     onerror="this.src='https://placehold.co/120x90?text=Lỗi+Ảnh';">
+                                                                     alt="poster" onerror="this.src='https://placehold.co/120x90?text=Lỗi+Ảnh';">
                                                                 <div class="play-overlay"><i class="fa-solid fa-play"></i></div>
                                                             </div>
                                                         </td>
@@ -159,22 +163,9 @@
                                                             </span>
                                                         </td>
                                                         <td>
-                                                            <button type="button" class="btn btn-sm btn-info text-white me-1" 
-                                                                    onclick="playVideo('${vid.id}', '${vid.titile}')" 
-                                                                    title="Xem video">
-                                                                <i class="fa-solid fa-play-circle"></i>
-                                                            </button>
-                                                            
-                                                            <button type="button" class="btn btn-sm btn-warning" 
-                                                                    onclick="editVideo('${vid.id}', '${vid.titile}', '${vid.description}', ${vid.active})">
-                                                                <i class="fa-solid fa-pen"></i>
-                                                            </button>
-                                                            
-                                                            <a href="${videoUrl}/delete?id=${vid.id}" 
-                                                               class="btn btn-sm btn-danger"
-                                                               onclick="return confirm('Bạn có chắc chắn muốn xóa video này không?');">
-                                                               <i class="fa-solid fa-trash"></i>
-                                                            </a>
+                                                            <button type="button" class="btn btn-sm btn-info text-white me-1" onclick="playVideo('${vid.id}', '${vid.titile}')"><i class="fa-solid fa-play-circle"></i></button>
+                                                            <button type="button" class="btn btn-sm btn-warning" onclick="editVideo('${vid.id}', '${vid.titile}', '${vid.description}', ${vid.active})"><i class="fa-solid fa-pen"></i></button>
+                                                            <a href="${videoUrl}/delete?id=${vid.id}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa video này không?');"><i class="fa-solid fa-trash"></i></a>
                                                         </td>
                                                     </tr>
                                                 </c:forEach>
@@ -183,6 +174,11 @@
                                     </c:if>
                                 </div>
                             </div>
+                        </c:when>
+
+                        <%-- CASE 3: REPORTS - NHÚNG FILE REPORT.JSP TỪ THƯ MỤC GUI --%>
+                        <c:when test="${param.page == 'reports'}">
+                            <jsp:include page="/gui/Report.jsp"></jsp:include>
                         </c:when>
 
                         <c:otherwise>
@@ -198,9 +194,6 @@
         </div>
     </div>
     
-    <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
-        </div>
-
     <div class="modal fade" id="createVideoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -294,6 +287,7 @@
             </div>
         </div>
     </div>
+
     <div class="modal fade" id="playVideoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered">
             <div class="modal-content bg-black">
@@ -313,7 +307,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // --- LOGIC PLAY VIDEO ---
         const playModal = new bootstrap.Modal(document.getElementById('playVideoModal'));
         const iframe = document.getElementById('videoIframe');
         const modalTitle = document.getElementById('playVideoTitle');
@@ -332,15 +325,12 @@
             stopVideo();
         });
 
-        // --- LOGIC CREATE VIDEO ---
         function previewYoutube() {
             var url = document.getElementById("youtube-link").value;
             var img = document.getElementById("video-poster");
             var idInput = document.getElementById("video-id");
-            
             var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
             var match = url.match(regExp);
-
             if (match && match[2].length == 11) {
                 var videoId = match[2];
                 img.src = "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
@@ -351,39 +341,25 @@
             }
         }
 
-        // --- LOGIC EDIT VIDEO (MỚI) ---
         const updateModalElement = document.getElementById('updateVideoModal');
         const updateModal = new bootstrap.Modal(updateModalElement);
 
-        // Hàm được gọi khi ấn nút "Sửa" trên bảng
         function editVideo(id, title, description, active) {
-            // 1. Đổ dữ liệu vào các ô input trong Modal Edit
             document.getElementById('edit-video-id').value = id;
             document.getElementById('edit-title').value = title;
             document.getElementById('edit-description').value = description;
-            
-            // Tái tạo lại link Youtube giả lập để hiển thị
             document.getElementById('edit-youtube-link').value = "https://www.youtube.com/watch?v=" + id;
-            
-            // Load ảnh poster hiện tại
             document.getElementById('edit-video-poster').src = "https://img.youtube.com/vi/" + id + "/hqdefault.jpg";
-
-            // Set trạng thái checkbox Active
             document.getElementById('edit-active').checked = active;
-
-            // 2. Hiển thị Modal
             updateModal.show();
         }
 
-        // Hàm Preview riêng cho Modal Edit
         function previewYoutubeEdit() {
             var url = document.getElementById("edit-youtube-link").value;
             var img = document.getElementById("edit-video-poster");
             var idInput = document.getElementById("edit-video-id");
-            
             var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
             var match = url.match(regExp);
-
             if (match && match[2].length == 11) {
                 var videoId = match[2];
                 img.src = "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";

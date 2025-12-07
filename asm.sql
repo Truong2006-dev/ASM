@@ -141,3 +141,73 @@ INSERT INTO Share (UserId, VideoId, Emails, ShareDate) VALUES
 ('U08', '9t8P3KJtE5s', 'friend8@gmail.com', '2024-01-13'),
 ('U09', 'ZcQgYQY2hNw', 'friend9@gmail.com', '2024-01-14'),
 ('U10', 'jWnp_GHSPdE', 'friend10@gmail.com', '2024-01-15');
+
+GO
+
+-- 1. SP cho Tab "FAVORITES" (Thống kê tổng hợp)
+
+IF OBJECT_ID('sp_ReportFavorites') IS NOT NULL
+    DROP PROC sp_ReportFavorites
+GO
+CREATE PROC sp_ReportFavorites
+AS
+BEGIN
+    SELECT 
+        v.Titile AS 'Group',
+        COUNT(f.Id) AS 'Likes',
+        MAX(f.LikeDate) AS 'Newest',
+        MIN(f.LikeDate) AS 'Oldest'
+    FROM Video v
+    LEFT JOIN Favorite f ON v.Id = f.VideoId
+    GROUP BY v.Titile
+    HAVING COUNT(f.Id) > 0 
+    ORDER BY 'Likes' DESC
+END
+GO
+
+-- 2. SP cho Tab "FAVORITE USERS" (Ai thích video nào?)
+IF OBJECT_ID('sp_ReportFavoriteUsers') IS NOT NULL
+    DROP PROC sp_ReportFavoriteUsers
+GO
+CREATE PROC sp_ReportFavoriteUsers
+    @VideoId VARCHAR(20)
+AS
+BEGIN
+    SELECT 
+        u.Id AS 'Username',
+        u.Fullname AS 'Fullname',
+        u.Email AS 'Email',
+        f.LikeDate AS 'FavoriteDate'
+    FROM Favorite f
+    JOIN Users u ON f.UserId = u.Id
+    WHERE f.VideoId = @VideoId
+END
+GO
+
+-- 3. SP cho Tab "SHARED FRIENDS" (Ai chia sẻ cho ai?)
+IF OBJECT_ID('sp_ReportSharedFriends') IS NOT NULL
+    DROP PROC sp_ReportSharedFriends
+GO
+CREATE PROC sp_ReportSharedFriends
+    @VideoId VARCHAR(20)
+AS
+BEGIN
+    SELECT 
+        u.Fullname AS 'SenderName',
+        u.Email AS 'SenderEmail',
+        s.Emails AS 'ReceiverEmail',
+        s.ShareDate AS 'SentDate'
+    FROM Share s
+    JOIN Users u ON s.UserId = u.Id
+    WHERE s.VideoId = @VideoId
+END
+GO
+
+-- Tab 1
+EXEC sp_ReportFavorites;
+
+-- Tab 2 (Thay ID video vào sau)
+EXEC sp_ReportFavoriteUsers 'Q5gE5ODKsZk';
+
+-- Tab 3 (Thay ID video vào sau)
+EXEC sp_ReportSharedFriends 'Q5gE5ODKsZk';
