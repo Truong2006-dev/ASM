@@ -90,6 +90,13 @@
                             <div class="d-grid mb-3">
                                 <button type="submit" class="btn btn-success btn-lg fw-bold">ĐĂNG KÝ</button>
                             </div>
+                            
+                            <div
+								class="d-flex justify-content-between align-items-center mb-4">									
+								<a
+									href="${pageContext.request.contextPath}/crud/index"
+									class="text-decoration-none small"><-- Quay lại Trang chủ</a>
+							</div>
 
                             <div class="text-center border-top pt-3">
                                 Đã có tài khoản? <a href="Login.jsp" class="text-decoration-none fw-bold text-success">Đăng nhập ngay</a>

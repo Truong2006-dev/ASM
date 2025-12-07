@@ -16,7 +16,7 @@ import java.io.IOException;
 
 import entity.User;
 
-@WebFilter({"/admin", "/like"})
+@WebFilter({"/admin", "/like", "/share"})
 public class AdminFilter extends HttpFilter implements Filter {
 	public static final String SECURITY_URI = "securityUri";
     public AdminFilter() {

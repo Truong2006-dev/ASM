@@ -85,7 +85,7 @@ public class VideosDAOImpl implements VideosDAO{
 	
 	@Override
 	public long count() {
-	    String jpql = "SELECT COUNT(v) FROM Videos v";
+	    String jpql = "SELECT COUNT(v) FROM Videos v WHERE v.active = true";
 	    return em.createQuery(jpql, Long.class).getSingleResult();
 	}
 }

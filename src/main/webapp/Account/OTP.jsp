@@ -91,6 +91,7 @@ body {
 							</div>
 
 							<div>
+								<input type="hidden" name="id" value="${id}">
 								<input type="hidden" name="email" value="${email}">
 							</div>
 

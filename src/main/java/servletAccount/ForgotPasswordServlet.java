@@ -1,6 +1,7 @@
 package servletAccount;
 
 import java.io.IOException;
+import java.util.List;
 
 import dao.UserDAO;
 import daoimpl.UserDAOImpl;
@@ -13,28 +14,35 @@ import jakarta.servlet.http.HttpServletResponse;
 import utils.MailSender;
 
 @WebServlet("/forgotpassword")
-public class ForgotPasswordServlet extends HttpServlet{
+public class ForgotPasswordServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+		String id = req.getParameter("id");
 		String email = req.getParameter("email");
-		String subject = "Chào mừng đến với POLY-OE";
-		long num = (long) (Math.random() * 9000000) + 1000000;
-		String content = "OTP của bạn là: " + num + "\nLưu ý khi nhập mã OTP thành công sẽ trở thành Mật khẩu của bạn" + "\nVui lòng thay đổi lại mật khẩu nếu cần thiết!";
-		
+
 		UserDAO dao = new UserDAOImpl();
-		User user = dao.findByEmail(email);
-		if(user == null) {
-			req.setAttribute("message", "Email này không tồn tại!");
+		User user = dao.findByIdEmail(id, email);
+		if (user == null) {
+			req.setAttribute("message", "Email hoặc Username này không tồn tại hoặc không trùng khớp!");
 			req.getRequestDispatcher("/Account/ForgotPassword.jsp").forward(req, resp);
 		}
 		
+		String subject = "Chào mừng đến với POLY-OE";
+		long num = (long) (Math.random() * 9000000) + 1000000;
+		String content = "Username: " + user.getId() +
+						"\nEmail: " + user.getEmail() +
+						"\nMã OTP của bạn là: " + num + 
+						"\nLưu ý khi nhập mã OTP thành công sẽ trở thành Mật khẩu của bạn" + 
+						"\nVui lòng thay đổi lại mật khẩu nếu cần thiết!";
+
 		try {
-		    MailSender.sendMail(email, subject, content);
+			MailSender.sendMail(email, subject, content);
 		} catch (Exception e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 		req.getSession().setAttribute("number", num);
-		req.setAttribute("email", email);
+		req.setAttribute("id", user.getId());
+		req.setAttribute("email", user.getEmail());
 		req.getRequestDispatcher("/Account/OTP.jsp").forward(req, resp);
 	}
 }

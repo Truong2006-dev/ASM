@@ -55,32 +55,15 @@
                     <div class="card-header-auth">
                         <div class="mb-3">
                             <div class="bg-white bg-opacity-25 rounded-circle d-inline-flex p-3">
-                                <i class="fa-solid fa-lock fa-3x text-white"></i>
+                                <i class="fa-solid fa-share fa-3x text-white"></i>
                             </div>
                         </div>
-                        <h4 class="mb-1">Quên mật khẩu?</h4>
-                        <p class="small text-white-50 mb-0">Nhập username và email để lấy lại mật khẩu</p>
+                        <h4 class="mb-1">Gửi video</h4>
+                        <p class="small text-white-50 mb-0">Nhập email bạn muốn gửi</p>
                     </div>
 
                     <div class="card-body p-4">
-                        <c:if test="${not empty message}">
-                            <div class="alert alert-danger text-center mb-3">
-                                ${message}
-                            </div>
-                        </c:if>
-                        <form action="${pageContext.request.contextPath}/forgotpassword" method="post">
-                            <div class="mb-4">
-                                <label class="form-label text-muted small fw-bold">USERNAME</label>
-                                <div class="input-group">
-                                    <span class="input-group-text bg-white border-end-0">
-                                        <i class="fa-solid fa-id-badge text-secondary"></i>
-                                    </span>
-                                    <input type="text" class="form-control border-start-0" 
-                                           name="id" 
-                                           required 
-                                           placeholder="Enter your username">
-                                </div>
-                            </div>
+                        <form action="${pageContext.request.contextPath}/shareVideo" method="post">
                             
                             <div class="mb-4">
                                 <label class="form-label text-muted small fw-bold">EMAIL ADDRESS</label>
@@ -91,20 +74,24 @@
                                     <input type="email" class="form-control border-start-0" 
                                            name="email" 
                                            required 
-                                           placeholder="Enter your registered email">
+                                           placeholder="Enter friends email">
                                 </div>
                             </div>
 
                             <div class="d-grid mb-3">
                                 <button type="submit" class="btn btn-primary btn-auth text-white rounded-pill">
-                                    SEND OTP
+                                    SEND VIDEO
                                 </button>
                             </div>
 
                             <div class="text-center">
-                                <a href="${pageContext.request.contextPath}/Account/Login.jsp" class="text-decoration-none text-secondary small">
-                                    <i class="fa-solid fa-chevron-left me-1"></i> Quay lại đăng nhập
+                                <a href="${pageContext.request.contextPath}/crud/index" class="text-decoration-none text-secondary small">
+                                    <i class="fa-solid fa-chevron-left me-1"></i> Quay lại Trang chủ
                                 </a>
+                            </div>
+                            
+                            <div>
+                            	<input type="hidden" name="vidid" value="${idvid}">
                             </div>
 
                         </form>
