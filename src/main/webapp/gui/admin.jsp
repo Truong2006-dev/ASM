@@ -59,7 +59,7 @@
                         <i class="fa-solid fa-film"></i> Quản lý Video
                     </a>
                     
-                    <a href="${pageContext.request.contextPath}/Home/TrangChu.jsp" class="nav-link mt-5 text-warning">
+                    <a href="${pageContext.request.contextPath}/crud/index" class="nav-link mt-5 text-warning">
                         <i class="fa-solid fa-arrow-left"></i> Xem trang web
                     </a>
                 </div>

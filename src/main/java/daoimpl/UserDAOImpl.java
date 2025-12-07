@@ -31,9 +31,12 @@ public class UserDAOImpl implements UserDAO {
 	@Override
 	public User findByEmail(String email) {
 		String jpql = "SELECT u FROM User u WHERE u.email = :email";
-		User user = em.createQuery(jpql, User.class)
-		              .setParameter("email", email)
-		              .getSingleResult();
+		User user;
+		try {
+			user = em.createQuery(jpql, User.class).setParameter("email", email).getSingleResult();
+		} catch (Exception e) {
+			user = null;
+		}
 		return user;
 	}
 

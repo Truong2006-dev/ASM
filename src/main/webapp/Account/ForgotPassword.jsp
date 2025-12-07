@@ -90,7 +90,7 @@
                             </div>
 
                             <div class="text-center">
-                                <a href="Login.jsp" class="text-decoration-none text-secondary small">
+                                <a href="${pageContext.request.contextPath}/Account/Login.jsp" class="text-decoration-none text-secondary small">
                                     <i class="fa-solid fa-chevron-left me-1"></i> Quay lại đăng nhập
                                 </a>
                             </div>

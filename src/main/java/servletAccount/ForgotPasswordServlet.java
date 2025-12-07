@@ -33,8 +33,8 @@ public class ForgotPasswordServlet extends HttpServlet{
 		} catch (Exception e) {
 		    e.printStackTrace();
 		}
-		req.getSession().setAttribute("email", email);
-		req.setAttribute("number", num);
+		req.getSession().setAttribute("number", num);
+		req.setAttribute("email", email);
 		req.getRequestDispatcher("/Account/OTP.jsp").forward(req, resp);
 	}
 }

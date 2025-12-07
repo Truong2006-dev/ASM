@@ -91,7 +91,7 @@ body {
 							</div>
 
 							<div>
-								<input type="hidden" name="number" value="${number}">
+								<input type="hidden" name="email" value="${email}">
 							</div>
 
 							<div class="d-grid mb-3">

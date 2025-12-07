@@ -18,20 +18,21 @@ public class OTPServlet extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		HttpSession session = req.getSession(false);
 		
-		String email =(String) session.getAttribute("email");
+		Long num1 =(Long) session.getAttribute("number");
+		String num2 = String.valueOf(num1);
 		String otp = req.getParameter("otp");
-		String num = req.getParameter("number");
+		String email = req.getParameter("email");
 		
-		if(num.equals(otp)) {
+		if(num2.equals(otp)) {
 			UserDAO dao = new UserDAOImpl();
 			User user = dao.findByEmail(email);
-			user.setPassword(num);
+			user.setPassword(num2);
 			dao.update(user);
 			req.getSession().invalidate();
 			req.getRequestDispatcher("/Account/Login.jsp").forward(req, resp);
 		}else {
 			req.setAttribute("message", "Mã OTP không hợp lệ vui lòng kiểm tra lại");
-			req.setAttribute("number", num);
+			req.setAttribute("email", email);
 			req.getRequestDispatcher("/Account/OTP.jsp").forward(req, resp);
 		}
 	}
